@@ -1,10 +1,12 @@
 require('dotenv').config();
 const PriceService = require('./services/priceService');
+const AlertService = require('./services/alertService');
 
 console.log('Starting PriceBot...');
 
 const SUPPORTED_TOKENS = ['bitcoin', 'ethereum', 'solana'];
 const priceService = new PriceService();
+const alertService = new AlertService();
 
 async function fetchAndDisplayPrices() {
     try {
@@ -16,6 +18,7 @@ async function fetchAndDisplayPrices() {
                 console.log(`❌ ${priceData.token}: Error - ${priceData.error}`);
             } else {
                 console.log(`💰 ${priceData.token}: $${priceData.price}`);
+                alertService.addPriceData(priceData.token, priceData.price);
             }
         });
         
@@ -28,6 +31,7 @@ async function fetchAndDisplayPrices() {
 async function main() {
     console.log('PriceBot initialized');
     console.log('Supported tokens:', SUPPORTED_TOKENS.join(', '));
+    console.log('Alert threshold:', alertService.alertThreshold + '%');
     
     // Fetch prices once
     await fetchAndDisplayPrices();
