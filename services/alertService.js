@@ -1,8 +1,9 @@
 class AlertService {
-    constructor() {
+    constructor(dataService = null) {
         this.alerts = new Map();
         this.priceHistory = new Map();
         this.alertThreshold = parseFloat(process.env.ALERT_THRESHOLD) || 5.0;
+        this.dataService = dataService;
     }
 
     addPriceData(token, price) {
@@ -46,13 +47,20 @@ class AlertService {
         
         // Store alert for potential future use
         const alertKey = `${token}_${Date.now()}`;
-        this.alerts.set(alertKey, {
+        const alertData = {
             token,
             currentPrice,
             previousPrice,
             changePercent,
             timestamp: new Date().toISOString()
-        });
+        };
+        
+        this.alerts.set(alertKey, alertData);
+        
+        // Save to file if dataService is available
+        if (this.dataService) {
+            this.dataService.saveAlertData(alertData);
+        }
     }
 
     getRecentAlerts(token = null) {
