@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "cli": "node cli.js",
+    "price": "node cli.js price",
+    "history": "node cli.js history",
+    "alerts": "node cli.js alerts"
   },
   "keywords": ["crypto", "price", "bot", "trading"],
   "author": "0xWhitmore",
